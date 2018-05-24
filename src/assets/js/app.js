@@ -6,6 +6,9 @@
     const context = canvas.getContext('2d');
     const btn = document.querySelector('.switch');
 
+    const takePictureDelay = 500;
+    const turnOffFlashDelay = 1000;
+
     const camera = {
         devices: null,
         device: null,
@@ -43,13 +46,15 @@
             });
         },
         takeSnapshot: function() {
-            context.drawImage(player, 0, 0, canvas.width, canvas.height);
-
             this.emitTorchState(true);
 
             setTimeout(() => {
+                context.drawImage(player, 0, 0, canvas.width, canvas.height);
+            }, takePictureDelay);
+
+            setTimeout(() => {
                 this.emitTorchState(false);
-            }, 500);
+            }, turnOffFlashDelay);
         },
         addTorchEvent: function() {
             btn.addEventListener('click', () => {
