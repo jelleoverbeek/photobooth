@@ -6,8 +6,8 @@
     const context = canvas.getContext('2d');
     const btn = document.querySelector('.switch');
 
-    const takePictureDelay = 500;
-    const turnOffFlashDelay = 1000;
+    const takePictureDelay = 800;
+    const turnOffFlashDelay = 1600;
 
     const camera = {
         devices: null,
