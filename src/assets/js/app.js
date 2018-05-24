@@ -1,24 +1,10 @@
 // (function () {
     const socket = io();
 
-    var test = 'test';
-
-    document.querySelector(".emit").addEventListener("click", function (ev) {
-        socket.emit("test", "hallo jesse");
-    });
-
-    socket.on('testAgain', function (msg) {
-        console.log("test:", msg);
-    });
-
     const player = document.getElementById('player');
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
-    const captureButton = document.getElementById('capture');
-
-    const constraints = {
-        video: true,
-    };
+    const btn = document.querySelector('.switch');
 
     const camera = {
         devices: null,
@@ -56,26 +42,21 @@
                 }
             });
         },
+        takeSnapshot: function() {
+            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+
+            this.emitTorchState(true);
+
+            setTimeout(() => {
+                this.emitTorchState(false);
+            }, 500);
+        },
         addTorchEvent: function() {
-            const _this = this;
-
-            //todo: check if camera has a torch
-
-            //let there be light!
-            const btn = document.querySelector('.switch');
-
-            btn.addEventListener('click', function(){
-                context.drawImage(player, 0, 0, canvas.width, canvas.height);
-
-                _this.emitTorchState(true);
-
-                setTimeout(function () {
-                    _this.emitTorchState(false);
-                }, 500);
+            btn.addEventListener('click', () => {
+                this.takeSnapshot()
             });
         },
         connect: function () {
-
             const _this = this;
 
             //Test browser support
@@ -115,8 +96,6 @@
                         });
                     });
                 });
-
-                //The light will be on as long the track exists
             }
         },
         init: function () {
@@ -126,7 +105,16 @@
     };
 
     const app = {
+        addSpacebarEvent: function() {
+            document.addEventListener('keydown', (event) => {
+                const keyCode = event.keyCode;
+                if(keyCode === 32) {
+                    camera.takeSnapshot();
+                }
+            });
+        },
         init: function () {
+            this.addSpacebarEvent();
             camera.init();
             console.log('init');
         }
