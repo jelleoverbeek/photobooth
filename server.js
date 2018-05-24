@@ -19,8 +19,16 @@ const test = "test1";
 
 io.on('connection', function(socket){
 
-    socket.on('test', function (message) {
-        console.log(message)
+    socket.on('torch', function (state) {
+        console.log("torch:", state);
+
+        io.emit('torchToggle', state)
+    });
+
+    socket.on('test', function (msg) {
+        console.log("test:", msg);
+
+        io.emit('testAgain', msg);
     });
 
     socket.on('disconnect', function () {
